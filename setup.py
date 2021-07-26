@@ -1,11 +1,24 @@
 from setuptools import setup, find_packages
 from subprocess import Popen, PIPE
+import os, os.path
+print(f"cwd: {os.getcwd()}")
 with open("README.md", "r", encoding="utf-8") as readme:
     long_description = readme.read()
     readme.close()
-with Popen(["git", "describe", "--tags", "--abbrev=0"], stdout=PIPE) as command:
-    output = command.communicate()
-    latest_tag = output[0].decode("utf-8").strip()
+version_file_name = "version.txt"
+if os.path.exists(version_file_name):
+    with open(version_file_name, "r") as stream:
+        latest_tag = stream.read().strip()
+        stream.close()
+else:
+    with Popen(["git", "tag", "-l"], stdout=PIPE) as command:
+        output = command.communicate()
+        tags = output[0].decode("utf-8").strip().split('\n')
+        latest_tag = tags[len(tags) - 1]
+        with open(version_file_name, "w") as stream:
+            stream.write(latest_tag)
+            stream.close()
+print(f"latest tag: {latest_tag}")
 setup(
     name="pkg-dependency-manager",
     version=latest_tag,
@@ -22,4 +35,4 @@ setup(
     package_dir={"":"src"},
     packages=find_packages(where="src"),
     python_requires=">=3.9.6"
-)
+)   
