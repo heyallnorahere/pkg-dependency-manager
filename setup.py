@@ -17,7 +17,6 @@ setup(
     url="https://github.com/yodasoda1219/pkg-dependency-manager",
     classifiers=[
         "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: Apache License 2.0",
         "Operating System :: OS Independent"
     ],
     package_dir={"":"src"},
